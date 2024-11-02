@@ -45,19 +45,19 @@ function drawDisplay() {
 
     // Placeholder text for display content
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = '20px Arial';
+    // ctx.font = '20px Arial';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
-    ctx.fillText('(8/2)*(2+3/3)', 490, 70);
+    // ctx.fillText('(8/2)*(2+3/3)', 490, 70);
     ctx.font = '28px Arial';
-    ctx.fillText('12', 490, 105);
+    ctx.fillText('0', 490, 105);
 }
 const buttons = [
     ['', '', '', '%', '/'],
-    ['(', '7', '8', '9', '*'],
+    ['(', '7', '8', '9', 'x'],
     [')', '4', '5', '6', '-'],
     ['Back', '1', '2', '3', '+'],
-    ['0', '', '', '.', '=']
+    ['0','0', '0','.', '=']
 ];
 // Draw calculator buttons
 function drawButtons() {
@@ -75,15 +75,11 @@ function drawButtons() {
                 // Make the '0' button wider
                 width = buttonWidth * 3 + spacing;
             }
-            if (i == 1 && j == 4) {
-                buttons[i][j] = 'x';
-            }
-
             const x = startX + j * (buttonWidth + spacing);
             const y = startY + i * (buttonHeight + spacing);
             const color = (j === buttons[i].length - 1 || i === buttons.length  && j < 3) ? '#FA8231' : '#4A4F50';
 
-            if (!(i === 4 && (j === 1 || j==2))) { // Skip a column position for wider '0'
+            if (!(i === 4 && (j === 1 || j ===2 ))) { // Skip a column position for wider '0'
                 drawButton(x, y, width, buttonHeight, color, buttons[i][j]);
             }
         }
@@ -91,6 +87,8 @@ function drawButtons() {
 }
 //add event listener to the canvas to handle button clicks
 let expression = '';
+let full_expression = '';
+let flag = false;
 canvas.addEventListener('click', function (event) { 
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -102,25 +100,53 @@ canvas.addEventListener('click', function (event) {
         const col = Math.floor((x - 10) / 101);
 
         const button = buttons[row][col];
-        if (button === 'Back') {
-            expression = expression.slice(0, -1);
-        } else if (button === '=') {
-            try {
-                expression = eval(expression).toString();
-            } catch (e) {
-                expression = 'Invalid expression';
-            }
-        } else {
-            expression += button;
-        }
-        drawDisplay();
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = '28px Arial';
-        ctx.textAlign = 'right';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(expression, 490, 105);
+        handleButtonClick(button);
     }
 });
+// Display update and evaluation
+function handleButtonClick(button) {
+    if (button === '=' && expression === '') {
+        return;
+    }
+    if (expression == 'Invalid Expression' || flag) {
+        expression = ''; // Clear expression if last evaluation was invalid
+        full_expression = '';
+        flag = false;
+        drawDisplay();
+    }
+    else if (button === 'x') {
+        expression += '*';
+    }
+    else if (button === 'Back') {
+        expression = expression.slice(0, -1);
+    } else if (button === '=') {
+        try {
+            full_expression = expression;
+            expression = eval(expression).toString();
+            flag = true;
+        } catch (e) {
+            expression = 'Invalid Expression';
+        }
+    } else {
+        expression += button;
+    }
+    updateDisplay();
+    // Placeholder text for display content
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '28px Arial';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(full_expression, 490, 79);
+    ctx.fillText(expression || '0', 490, 105);
+}
+
+//update display
+function updateDisplay() {
+    ctx.fillStyle = '#2F2F2F';
+    ctx.fillRect(10, 40, 505, 80);
+    ctx.strokeStyle = '#000';
+    ctx.strokeRect(10, 40, 505, 80);
+}
 
 // Draw all elements
 function drawCalculator() {
