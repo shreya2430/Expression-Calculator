@@ -37,7 +37,7 @@ function drawWindowControls() {
 }
 
 // Draw display area
-function drawDisplay() {
+function drawDisplay(expression = '0', full_expression = '') {
     ctx.fillStyle = '#2F2F2F';
     ctx.fillRect(10, 45, 504, 80);
     ctx.strokeStyle = '#000';
@@ -45,12 +45,12 @@ function drawDisplay() {
 
     // Placeholder text for display content
     ctx.fillStyle = '#FFFFFF';
-    // ctx.font = '20px Arial';
+    ctx.font = '20px Arial';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
-    // ctx.fillText('(8/2)*(2+3/3)', 490, 70);
+    ctx.fillText(full_expression, 490, 70);
     ctx.font = '28px Arial';
-    ctx.fillText('0', 490, 105);
+    ctx.fillText(expression, 490, 105);
 }
 const buttons = [
     ['', '', '', '%', '/'],
@@ -130,22 +130,7 @@ function handleButtonClick(button) {
     } else {
         expression += button;
     }
-    updateDisplay();
-    // Placeholder text for display content
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '28px Arial';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(full_expression, 490, 79);
-    ctx.fillText(expression || '0', 490, 105);
-}
-
-//update display
-function updateDisplay() {
-    ctx.fillStyle = '#2F2F2F';
-    ctx.fillRect(10, 40, 505, 80);
-    ctx.strokeStyle = '#000';
-    ctx.strokeRect(10, 40, 505, 80);
+    drawDisplay(expression, full_expression);
 }
 
 // Draw all elements
