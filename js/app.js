@@ -39,9 +39,9 @@ function drawWindowControls() {
 // Draw display area
 function drawDisplay() {
     ctx.fillStyle = '#2F2F2F';
-    ctx.fillRect(10, 40, 505, 80);
+    ctx.fillRect(10, 45, 504, 80);
     ctx.strokeStyle = '#000';
-    ctx.strokeRect(10, 40, 505, 80);
+    ctx.strokeRect(10, 45, 504, 80);
 
     // Placeholder text for display content
     ctx.fillStyle = '#FFFFFF';
@@ -105,7 +105,7 @@ canvas.addEventListener('click', function (event) {
 });
 // Display update and evaluation
 function handleButtonClick(button) {
-    if (button === '=' && expression === '') {
+    if ((button === '=' && expression === '') || (expression === '0' && button === '0')) {
         return;
     }
     if (expression == 'Invalid Expression' || flag) {
