@@ -105,7 +105,8 @@ canvas.addEventListener('click', function (event) {
 });
 // Display update and evaluation
 function handleButtonClick(button) {
-    if ((button === '=' && expression === '') || (expression === '0' && button === '0')) {
+    if ((button === '=' && expression === '') || (expression === '0' && button === '0') || (button === '' && expression === '')) {
+        drawDisplay();
         return;
     }
     if (expression == 'Invalid Expression' || flag) {
@@ -113,6 +114,7 @@ function handleButtonClick(button) {
         full_expression = '';
         flag = false;
         drawDisplay();
+        return;
     }
     else if (button === 'x') {
         expression += '*';
