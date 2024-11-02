@@ -52,16 +52,16 @@ function drawDisplay() {
     ctx.font = '28px Arial';
     ctx.fillText('12', 490, 105);
 }
-
+const buttons = [
+    ['', '', '', '%', '/'],
+    ['(', '7', '8', '9', '*'],
+    [')', '4', '5', '6', '-'],
+    ['Back', '1', '2', '3', '+'],
+    ['0', '', '', '.', '=']
+];
 // Draw calculator buttons
 function drawButtons() {
-    const buttons = [
-        ['', '', '', '%', '/'],
-        ['(', '7', '8', '9', '*'],
-        [')', '4', '5', '6', '-'],
-        ['Back', '1', '2', '3', '+'],
-        ['0','','', '.', '=']
-    ];
+   
     const buttonWidth = 100;
     const buttonHeight = 70;
     const startX = 10;
@@ -75,6 +75,9 @@ function drawButtons() {
                 // Make the '0' button wider
                 width = buttonWidth * 3 + spacing;
             }
+            if (i == 1 && j == 4) {
+                buttons[i][j] = 'x';
+            }
 
             const x = startX + j * (buttonWidth + spacing);
             const y = startY + i * (buttonHeight + spacing);
@@ -86,6 +89,38 @@ function drawButtons() {
         }
     }
 }
+//add event listener to the canvas to handle button clicks
+let expression = '';
+canvas.addEventListener('click', function (event) { 
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    console.log(x, y);
+    // Check if the click was inside the button area
+    if (x > 10 && x < 515 && y > 130 && y < 510) {
+        const row = Math.floor((y - 130) / 71);
+        const col = Math.floor((x - 10) / 101);
+
+        const button = buttons[row][col];
+        if (button === 'Back') {
+            expression = expression.slice(0, -1);
+        } else if (button === '=') {
+            try {
+                expression = eval(expression).toString();
+            } catch (e) {
+                expression = 'Invalid expression';
+            }
+        } else {
+            expression += button;
+        }
+        drawDisplay();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '28px Arial';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(expression, 490, 105);
+    }
+});
 
 // Draw all elements
 function drawCalculator() {
