@@ -50,10 +50,10 @@ function drawDisplay(expression = '0', full_expression = '') {
     ctx.textBaseline = 'middle';
     ctx.fillText(full_expression, 490, 70);
     ctx.font = '28px Arial';
-    ctx.fillText(expression, 490, 105);
+    ctx.fillText(expression === '' ? '0' : expression, 490, 105);
 }
 const buttons = [
-    ['', '', '', '%', '/'],
+    ['', '', 'CE', '%', '/'],
     ['(', '7', '8', '9', 'x'],
     [')', '4', '5', '6', '-'],
     ['Back', '1', '2', '3', '+'],
@@ -109,7 +109,12 @@ function handleButtonClick(button) {
         drawDisplay();
         return;
     }
-    if (expression == 'Invalid Expression' || flag) {
+    else if (button === 'CE') {
+        expression = '0';
+        full_expression = '';
+        drawDisplay();
+    }
+    else if (expression == 'Invalid Expression' || flag) {
         expression = ''; // Clear expression if last evaluation was invalid
         full_expression = '';
         flag = false;
