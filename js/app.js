@@ -110,7 +110,7 @@ function handleButtonClick(button) {
         return;
     }
     else if (button === 'CE') {
-        expression = '0';
+        expression = '';
         full_expression = '';
         drawDisplay();
     }
@@ -128,6 +128,8 @@ function handleButtonClick(button) {
         expression = expression.slice(0, -1);
     } else if (button === '=') {
         try {
+            // Remove leading zeros in numbers to avoid octal interpretation
+            expression = expression.replace(/\b0+(?=\d)/g, '');
             full_expression = expression;
             expression = eval(expression).toString();
             flag = true;
