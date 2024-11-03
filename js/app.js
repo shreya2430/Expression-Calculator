@@ -147,6 +147,12 @@ canvas.addEventListener('click', function (event) {
         }
     }
 });
+function isNumberButton(button) {
+    return /^[0-9]$/.test(button);
+}
+function isOperatorButton(button) {
+    return /^[+\-\/%*]$/.test(button);
+}
 // Display update and evaluation
 function handleButtonClick(button) {
     // Set a maximum length for the input (e.g., 20 characters)
@@ -166,11 +172,26 @@ function handleButtonClick(button) {
         full_expression = '';
         drawDisplay();
     }
-    else if (expression == 'Invalid Expression' || flag) {
+    else if (flag && expression !== 'Invalid Expression' && expression !== '') {
+        if (button === 'x') { 
+                button = '*';
+        }
+        if (isNumberButton(button)) {
+            full_expression = '';
+            expression = '';
+            expression += button;
+            flag = false;
+        }
+        else if (isOperatorButton(button)) { 
+            expression += button;
+            flag = false;
+        }
+    }
+    else if (expression === 'Invalid Expression' || flag) {
         expression = ''; // Clear expression if last evaluation was invalid
         full_expression = '';
-        flag = false;
         drawDisplay();
+        flag = false;
         return;
     }
     else if (button === 'x') {
@@ -178,6 +199,9 @@ function handleButtonClick(button) {
     }
     else if (button === 'Back') {
         expression = expression.slice(0, -1);
+        if (expression === '') {
+            full_expression = '';
+        }
     } else if (button === '=') {
         try {
             // Remove leading zeros in numbers to avoid octal interpretation
