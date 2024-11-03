@@ -69,7 +69,7 @@ function drawButtons() {
     const startX = 10;
     const startY = 130;
     const spacing = 1;
-
+    // Iterate over all buttons to draw them
     for (let i = 0; i < buttons.length; i++) {
         for (let j = 0; j < buttons[i].length; j++) {
             let width = buttonWidth;
@@ -109,6 +109,7 @@ canvas.addEventListener('click', function (event) {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
+    // Iterate over all buttons to check if the click is within a button
     for (let i = 0; i < buttons.length; i++) {
         for (let j = 0; j < buttons[i].length; j++) {
             if (i === 0 && (j === 0 || j === 1)) {
@@ -147,9 +148,11 @@ canvas.addEventListener('click', function (event) {
         }
     }
 });
+//check if the button is a number
 function isNumberButton(button) {
     return /^[0-9]$/.test(button);
 }
+//check if the button is an operator
 function isOperatorButton(button) {
     return /^[+\-\/%*]$/.test(button);
 }
@@ -158,11 +161,13 @@ function handleButtonClick(button) {
     // Set a maximum length for the input (e.g., 20 characters)
     const maxLength = 30;
 
+    // Check if the expression length exceeds the maximum length
     if (expression.length >= maxLength && button !== 'Back' && button !== 'CE' && button !== '=') {
         alert('Maximum input length reached!');
         return; // Ignore new inputs if the max length is reached, except for backspace and clear
     }
 
+    // Handle button clicks
     if ((button === '=' && expression === '') || (expression === '0' && button === '0') || (button === '' && expression === '')) {
         drawDisplay();
         return;
@@ -172,6 +177,7 @@ function handleButtonClick(button) {
         full_expression = '';
         drawDisplay();
     }
+    // Clear the last entry    
     else if (flag && expression !== 'Invalid Expression' && expression !== '') {
         if (button === 'x') { 
                 button = '*';
