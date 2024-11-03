@@ -6,6 +6,7 @@ const ctx = canvas.getContext('2d');
 function drawButton(x, y, width, height, color, text = '', textColor = '#FFFFFF') {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, width, height);
+    ctx.lineWidth = 1.2; // Set the border width
     ctx.strokeStyle = '#000';
     ctx.strokeRect(x, y, width, height);
 
@@ -40,6 +41,7 @@ function drawWindowControls() {
 function drawDisplay(expression = '0', full_expression = '') {
     ctx.fillStyle = '#2F2F2F';
     ctx.fillRect(10, 45, 504, 80);
+    ctx.lineWidth = 1.2; // Set the border width
     ctx.strokeStyle = '#000';
     ctx.strokeRect(10, 45, 504, 80);
 
@@ -89,18 +91,41 @@ function drawButtons() {
 let expression = '';
 let full_expression = '';
 let flag = false;
-canvas.addEventListener('click', function (event) { 
+
+canvas.addEventListener('click', function (event) {
+    const buttonWidth = 100;
+    const buttonHeight = 70;
+    const startX = 10;
+    const startY = 130;
+    const spacing = 1;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    console.log(x, y);
-    // Check if the click was inside the button area
-    if (x > 10 && x < 515 && y > 130 && y < 510) {
-        const row = Math.floor((y - 130) / 71);
-        const col = Math.floor((x - 10) / 101);
 
-        const button = buttons[row][col];
-        handleButtonClick(button);
+    for (let i = 0; i < buttons.length; i++) {
+        for (let j = 0; j < buttons[i].length; j++) {
+            const buttonX = startX + j * (buttonWidth + spacing);
+            const buttonY = startY + i * (buttonHeight + spacing);
+            const width = (i === 4 && j === 0) ? buttonWidth * 3 + spacing : buttonWidth;
+
+            // Check if the click is within the button boundaries
+            if (x > buttonX && x < buttonX + width && y > buttonY && y < buttonY + buttonHeight) {
+                // Draw the button with a light white background on click
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'; // Light white background for click effect
+                ctx.fillRect(buttonX, buttonY, width, buttonHeight);
+                ctx.strokeStyle = '#000'; // Original border color
+                ctx.strokeRect(buttonX, buttonY, width, buttonHeight);
+
+                // Redraw the button with its original color after a short delay
+                setTimeout(() => {
+                    const originalColor = (j === buttons[i].length - 1 || i === buttons.length && j < 3) ? '#FA8231' : '#4A4F50'; // Orange for operator buttons, black for others
+                    drawButton(buttonX, buttonY, width, buttonHeight, originalColor, buttons[i][j]);
+                }, 150);
+
+                // Call the original button click handling function to process the button's action
+                handleButtonClick(buttons[i][j]);
+            }
+        }
     }
 });
 // Display update and evaluation
