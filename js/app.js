@@ -59,7 +59,7 @@ const buttons = [
     ['(', '7', '8', '9', 'x'],
     [')', '4', '5', '6', '-'],
     ['Back', '1', '2', '3', '+'],
-    ['0','0', '0','.', '=']
+    ['0','.', '=']
 ];
 // Draw calculator buttons
 function drawButtons() {
@@ -77,13 +77,20 @@ function drawButtons() {
                 // Make the '0' button wider
                 width = buttonWidth * 3 + spacing;
             }
-            const x = startX + j * (buttonWidth + spacing);
-            const y = startY + i * (buttonHeight + spacing);
-            const color = (j === buttons[i].length - 1 || i === buttons.length  && j < 3) ? '#FA8231' : '#4A4F50';
+            // Calculate positions explicitly for the '.' and '=' buttons
+            let x = startX + j * (buttonWidth + spacing);
+            let y = startY + i * (buttonHeight + spacing);
 
-            if (!(i === 4 && (j === 1 || j ===2 ))) { // Skip a column position for wider '0'
-                drawButton(x, y, width, buttonHeight, color, buttons[i][j]);
+            if (i === 4 && j === 1) { // Position for '.'
+                x = startX + (buttonWidth * 3) + (spacing * 3); // Adjust x position for '.'
+            } else if (i === 4 && j === 2) { // Position for '='
+                x = startX + (buttonWidth * 4) + (spacing * 4); // Adjust x position for '='
             }
+
+            const color = (j === buttons[i].length - 1 || i === buttons.length && j < 3) ? '#FA8231' : '#4A4F50';
+
+            // Draw buttons normally
+            drawButton(x, y, width, buttonHeight, color, buttons[i][j]);
         }
     }
 }
@@ -104,9 +111,21 @@ canvas.addEventListener('click', function (event) {
 
     for (let i = 0; i < buttons.length; i++) {
         for (let j = 0; j < buttons[i].length; j++) {
-            const buttonX = startX + j * (buttonWidth + spacing);
-            const buttonY = startY + i * (buttonHeight + spacing);
-            const width = (i === 4 && j === 0) ? buttonWidth * 3 + spacing : buttonWidth;
+            if (i === 0 && (j === 0 || j === 1)) {
+                continue; // Skip processing these buttons
+            }
+            let buttonX = startX + j * (buttonWidth + spacing);
+            let buttonY = startY + i * (buttonHeight + spacing);
+            let width = buttonWidth;
+
+            // Adjust positions for the last row buttons
+            if (i === 4 && j === 0) {
+                width = buttonWidth * 3 + spacing; // Adjust width for '0'
+            } else if (i === 4 && j === 1) {
+                buttonX = startX + (buttonWidth * 3) + (spacing * 3); // Adjust position for '.'
+            } else if (i === 4 && j === 2) {
+                buttonX = startX + (buttonWidth * 4) + (spacing * 4); // Adjust position for '='
+            }
 
             // Check if the click is within the button boundaries
             if (x > buttonX && x < buttonX + width && y > buttonY && y < buttonY + buttonHeight) {
