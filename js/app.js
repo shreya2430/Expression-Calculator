@@ -186,6 +186,10 @@ function handleButtonClick(button) {
 
             // Evaluate the expression safely
             let result = eval(expression);
+            // Limit result to 10 decimal places if it's a floating-point number
+            if (result % 1 !== 0) {
+                result = parseFloat(result.toFixed(10));
+            }
             if (!isFinite(result)) {
                 expression = 'Overflow';
             } else {
