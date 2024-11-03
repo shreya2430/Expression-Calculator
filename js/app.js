@@ -149,6 +149,14 @@ canvas.addEventListener('click', function (event) {
 });
 // Display update and evaluation
 function handleButtonClick(button) {
+    // Set a maximum length for the input (e.g., 20 characters)
+    const maxLength = 30;
+
+    if (expression.length >= maxLength && button !== 'Back' && button !== 'CE' && button !== '=') {
+        alert('Maximum input length reached!');
+        return; // Ignore new inputs if the max length is reached, except for backspace and clear
+    }
+
     if ((button === '=' && expression === '') || (expression === '0' && button === '0') || (button === '' && expression === '')) {
         drawDisplay();
         return;
@@ -175,7 +183,14 @@ function handleButtonClick(button) {
             // Remove leading zeros in numbers to avoid octal interpretation
             expression = expression.replace(/\b0+(?=\d)/g, '');
             full_expression = expression;
-            expression = eval(expression).toString();
+
+            // Evaluate the expression safely
+            let result = eval(expression);
+            if (!isFinite(result)) {
+                expression = 'Overflow';
+            } else {
+                expression = result.toString();
+            }
             flag = true;
         } catch (e) {
             expression = 'Invalid Expression';
