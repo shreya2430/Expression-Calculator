@@ -20,22 +20,17 @@ function drawButton(x, y, width, height, color, text = '', textColor = '#FFFFFF'
 }
 
 // Draw window controls (red, yellow, green circles)
-function drawWindowControls() {
-    ctx.fillStyle = '#F44336';
+function drawWindowControls($color, $x) {
+    ctx.fillStyle = $color;
     ctx.beginPath();
-    ctx.arc(30, 20, 9, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = '#FFC107';
-    ctx.beginPath();
-    ctx.arc(60, 20, 9, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = '#4CAF50';
-    ctx.beginPath();
-    ctx.arc(90, 20, 9, 0, Math.PI * 2);
+    ctx.arc($x, 20, 9, 0, Math.PI * 2);
     ctx.fill();
 }
+
+// Draw window controls red, yellow, green circles
+drawWindowControls('#F44336', 30);
+drawWindowControls('#FFC107', 60);
+drawWindowControls('#4CAF50', 90);
 
 // Draw display area
 function drawDisplay(expression = '0', full_expression = '') {
